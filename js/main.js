@@ -1,3 +1,9 @@
+// 千分位格式化
+function formatNumber(num) {
+  if (isNaN(num)) return '';
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 // ================= 精度处理工具函数 =================
 function getDecimalLength(num) {
     const str = num.toString();
@@ -21,7 +27,7 @@ const preciseMath = {
     }
 };
 // ==================================================
-const displayMain = document.getElementById('display-main');
+const  = document.getElementById('display-main');
 const displaySub = document.getElementById('display-sub');
 const keyboard = document.getElementById('keyboard');
 
@@ -132,27 +138,33 @@ let canRepeat = false;
 // 主显示区字号自适应：位数多到装不下就逐像素缩小，缩到下限为止（#124）
 // ---------------------------------------------------------------
 // 基准字号直接读样式表，避免和 css/style.css 的 32px 各写一份
-const DISPLAY_FONT_BASE = parseFloat(getComputedStyle(displayMain).fontSize) || 32;
+const DISPLAY_FONT_BASE = parseFloat(getComputedStyle().fontSize) || 32;
 const DISPLAY_FONT_MIN = 14; // 最小字号：再长也不小于它，超出部分交给横向滚动
 
 /** 先回到基准字号；装不下就逐像素缩小，直到不再溢出或触到最小字号。 */
 function fitDisplayFont() {
-  displayMain.style.fontSize = '';
-  if (displayMain.scrollWidth <= displayMain.clientWidth) {
+  .style.fontSize = '';
+  if (.scrollWidth <= .clientWidth) {
     return; // 装得下，保持样式表里的基准字号
   }
   for (let size = DISPLAY_FONT_BASE - 1; size >= DISPLAY_FONT_MIN; size -= 1) {
-    displayMain.style.fontSize = `${size}px`;
-    if (displayMain.scrollWidth <= displayMain.clientWidth) {
+    .style.fontSize = `${size}px`;
+    if (.scrollWidth <= .clientWidth) {
       return;
     }
   }
 }
 
 function show() {
-  displayMain.textContent = text;
+  let num = Number(text);
+  if (!isNaN(num)) {
+    displayMain.textContent = formatNumber(num);
+  } else {
+    displayMain.textContent = text;
+  }
   fitDisplayFont();
 }
+
 
 function showSub(line) {
   displaySub.textContent = line || '';
